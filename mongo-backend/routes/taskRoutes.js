@@ -5,15 +5,18 @@ const Task = require("../models/Task");
 // GET all tasks
 router.get("/", async (req, res) => {
   try {
+    console.log("Fetching all tasks...");
     const tasks = await Task.find();
     res.status(200).json(tasks);
   } catch (err) {
+    console.error("Error fetching tasks:", err.message);
     res.status(500).json({ message: err.message });
   }
 });
 
 // POST a new task
 router.post("/", async (req, res) => {
+  console.log("Creating new task with data:", req.body);
   const task = new Task({
     title: req.body.title,
   });
@@ -22,6 +25,7 @@ router.post("/", async (req, res) => {
     const newTask = await task.save();
     res.status(201).json(newTask);
   } catch (err) {
+    console.error("Error saving task:", err.message);
     res.status(400).json({ message: err.message });
   }
 });
@@ -29,10 +33,12 @@ router.post("/", async (req, res) => {
 // DELETE a task
 router.delete("/:id", async (req, res) => {
   try {
+    console.log(`Attempting to delete task ID: ${req.params.id}`);
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted" });
   } catch (err) {
+    console.error(`Error deleting task ID ${req.params.id}:`, err.message);
     res.status(500).json({ message: err.message });
   }
 });

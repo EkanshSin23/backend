@@ -2,11 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const morgan = require("morgan");
 const taskRoutes = require("./routes/taskRoutes");
 
 const app = express();
 
 // Middleware
+app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
@@ -14,6 +16,7 @@ app.use(express.json());
 const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
   try {
+    console.log("Attempting to connect to MongoDB...");
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB Connected...");
   } catch (err) {
